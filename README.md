@@ -1,5 +1,7 @@
 mysql01 Cookbook
 ================
+MySQLをインストールするクックブック
+
 TODO: Enter the cookbook description here.
 
 e.g.
