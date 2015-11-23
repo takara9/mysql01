@@ -114,9 +114,16 @@ end
 #
 # MySQLの自動起動と停止を設定
 #
-service "mysql" do
+service "mysql_stop" do
+  service_name 'mysql'
+  action :stop
+end
+
+service "mysql_default" do
+  service_name 'mysql'
   supports :start => true, :stop => true
-  action [ :enable, :stop]
+  action :enable
+  only_if {node["mysql"]["service"] == 'enable'}
 end
 
 
