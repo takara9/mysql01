@@ -1,11 +1,17 @@
 mysql01 Cookbook
 ================
-MySQLをインストールするクックブック
 
-TODO: Enter the cookbook description here.
+MySQL 5.6 コミュニティ・エディションをダウンロードしてインストールするクックブックです。
+このクックブックでは、LinuxディストリビューションのMySQLを利用せず、https://dev.mysql.com/downloads/mysql/ から MySQL v5.6 を入手します。そして、データ領域を "/data1" に作成します。 このため "/data1" をポータブルストレージやiSCSIストレージに設定すれば、サーバーのスケールアップが容易になります。
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
+
+システム構成
+------------
+![MySQLシステム構成](doc/MySQL_config.png)
+
+![MySQLスケールアップシナリオ](doc/MySQL_Scale_up_story.png)
+
+
 
 Requirements
 ------------
