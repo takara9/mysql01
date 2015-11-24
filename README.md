@@ -15,13 +15,18 @@ MySQL 5.6 コミュニティ・エディションをダウンロードしてイ�
 
 このクックブックとiSCSIストレージのクックブックを組み合わせる事で、データ移行不要のサーバーのスケールアップが可能になります。
 最初は、仮想サーバーに、iSCSIトレージと本クックブックを適用します。仮想サーバーの2CPU構成で始めたとして、そのCPU使用率がフルになってしまったら、ベアメタルサーバーに、iSCSIストレージのクックブックとMySQLのクックブックを適用します。
+
 この際、スケールアップサーバーへ適用するクックブックで、iSCSIストレージのアトリビュート["iscsi_host"]を"standby"に、MySQLのアトリビュート["mysql"]["node"]を"standby"にします。これにより、iSCSIではセッションの確立までに留め、ストレージにファイルシステムを作成したりマウントしたりしません。また、MySQLではインストールと設定ファイルの配置だけに留め起動しません。
+
+この様に、アトリビュートの設定を変える事で、既存環境に影響を与える事なく、スケールアップするためのサーバーを準備していく事ができます。もちろん、設定完了後に再起動するとリソースを取りにいくので注意が必要です。
 
 ![MySQLスケールアップシナリオ](doc/MySQL_Scale_up_story.png)
 
 
 前提条件(Requirements)
 ------------
+
+
 #### 対応オペレーティングシステム
 * CentOS 7.x - Minimal Install (64 bit) 
 * CentOS 6.x - Minimal Install (64 bit) 
@@ -30,6 +35,10 @@ MySQL 5.6 コミュニティ・エディションをダウンロードしてイ�
 
 アトリビュート(Attributes)
 ----------
+
+MySQLのアプリケーションのユーザーを作成して、他のアプリサーバー等からアクセス可能な設定にします。このためのユーザー認証情報を設定する必要があります。
+
+また、["mysql"]["node"]を"service"に設定すると、データ領域を初期化して、MySQLサーバーを起動するまで進みます。一方、["mysql"]["node"]を"standby"にすると、MySQLのインストール、設定ファイルの配置までとして、既存のインスタンスやデータに影響が無いようにします。
 
 #### mysql01::default
 <table>
@@ -81,33 +90,24 @@ MySQL 5.6 コミュニティ・エディションをダウンロードしてイ�
 
 使い方(Usage)
 -----
-#### mysql01::default
-TODO: Write usage instructions for each cookbook.
+必要最小限のクックブックの適用方法です。設定したいサーバーにログインして、順番に進めていきます。
 
-e.g.
-Just include `mysql01` in your node's `run_list`:
+```
+# curl -L https://www.opscode.com/chef/install.sh | bash
+# knife cookbook create dummy -o /var/chef/cookbooks
+# cd /var/chef/cookbooks
+# git clone https://github.com/takara9/mysql01
+```
+アトリビュートの設定を編集して、次のコマンドでクックブックをサーバーに適用します。
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[mysql01]"
-  ]
-}
+```
+# chef-solo -o mysql01
 ```
 
-Contributing
-------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
-
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
 
 License and Authors
 -------------------
-Authors: TODO: List authors
+
+Authors: Maho Takara (高良 真穂)
+
+
