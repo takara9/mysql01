@@ -105,7 +105,7 @@ MySQLのアプリケーションのユーザーを作成して、他のアプリ
 ```
 
 
-License and Authors
+Authors
 -------------------
 
 Authors: Maho Takara (高良 真穂)
