@@ -9,29 +9,28 @@ MySQL 5.6 コミュニティ・エディションをダウンロードしてイ�
 ------------
 
 このクックブックは、次の図の様な構成をつくるものです。/data1のファイルシステムにMySQLのデータ領域を移動している処が特徴です。
+
 ![MySQLシステム構成](doc/MySQL_config.png)
 
 
 このクックブックとiSCSIストレージのクックブックを組み合わせる事で、データ移行不要のサーバーのスケールアップが可能になります。
 最初は、仮想サーバーに、iSCSIトレージと本クックブックを適用します。仮想サーバーの2CPU構成で始めたとして、そのCPU使用率がフルになってしまったら、ベアメタルサーバーに、iSCSIストレージのクックブックとMySQLのクックブックを適用します。
 この際、スケールアップサーバーへ適用するクックブックで、iSCSIストレージのアトリビュート["iscsi_host"]を"standby"に、MySQLのアトリビュート["mysql"]["node"]を"standby"にします。これにより、iSCSIではセッションの確立までに留め、ストレージにファイルシステムを作成したりマウントしたりしません。また、MySQLではインストールと設定ファイルの配置だけに留め起動しません。
+
 ![MySQLスケールアップシナリオ](doc/MySQL_Scale_up_story.png)
 
 
-
-Requirements
+前提条件(Requirements)
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
+#### 対応オペレーティングシステム
+* CentOS 7.x - Minimal Install (64 bit) 
+* CentOS 6.x - Minimal Install (64 bit) 
+* Ubuntu Linux 14.04 LTS Trusty Tahr - Minimal Install (64 bit) 
 
-e.g.
-#### packages
-- `toaster` - mysql01 needs toaster to brown your bagel.
 
-Attributes
+アトリビュート(Attributes)
 ----------
-TODO: List your cookbook attributes here.
 
-e.g.
 #### mysql01::default
 <table>
   <tr>
@@ -41,14 +40,46 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['mysql01']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td>["mysql"]["root_password"]</td>
+    <td>文字列</td>
+    <td>MySQL root パスワード</td>
+    <td>NULL (必須)</td>
+  </tr>
+  <tr>
+    <td>["mysql"]["db_name"]</td>
+    <td>文字列</td>
+    <td>データベース名</td>
+    <td>NULL (必須)</td>
+  </tr>
+  <tr>
+    <td>["mysql"]["user"]["name"]</td>
+    <td>文字列</td>
+    <td>アプリユーザー名</td>
+    <td>NULL (必須)</td>
+  </tr>
+  <tr>
+    <td>["mysql"]["user"]["password"]</td>
+    <td>文字列</td>
+    <td>アプリユーザーパスワード</td>
+    <td>NULL (必須)</td>
+  </tr>
+  <tr>
+    <td>["mysql"]["node"]</td>
+    <td>文字列</td>
+    <td>service/standbyの択一</td>
+    <td>service</td>
+  </tr>
+  <tr>
+    <td>["mysql"]["service"]</td>
+    <td>文字列</td>
+    <td>enable/disableの択一</td>
+    <td>service</td>
   </tr>
 </table>
 
-Usage
+
+
+使い方(Usage)
 -----
 #### mysql01::default
 TODO: Write usage instructions for each cookbook.
